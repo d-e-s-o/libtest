@@ -119,7 +119,12 @@ namespace tst
 
       last_failed_ = test_id_;
 
-      std::cout << "Error: " << file << " (" << line << "): " << message << '\n';
+      std::cout << "Error: " << file << " (" << line << ")";
+
+      if (message != 0)
+        std::cout << ": " << message;
+
+      std::cout << '\n';
     }
   }
 
