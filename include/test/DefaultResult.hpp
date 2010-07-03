@@ -20,8 +20,6 @@
 #ifndef TSTDEFAULTRESULT_HPP
 #define TSTDEFAULTRESULT_HPP
 
-#include <iostream>
-
 #include "TestResult.hpp"
 
 
@@ -32,15 +30,18 @@ namespace tst
    * TestResult. Being minimalistic it merely prints the results to a
    * stream.
    */
+  template<typename T>
   class DefaultResult: public TestResult
   {
   public:
-    DefaultResult();
+    DefaultResult(T& printer, bool verbose = false);
 
     virtual void StartTest(char const* test);
     virtual void EndTest();
 
     virtual void Assert(bool assertion, char const* file, int line, char const* message);
+
+    void PrintSummary();
 
     int GetTestsRun() const;
     int GetTestsFailed() const;
@@ -49,6 +50,9 @@ namespace tst
     int GetAssertionsFailed() const;
 
   private:
+    T* printer_;
+    bool verbose_;
+
     int test_id_;
 
     int tests_run_;
@@ -60,7 +64,8 @@ namespace tst
     char const* current_test_;
     int last_failed_;
 
-    void PrintTestMessage(char const* message) const;
+    void PrintTestResult() const;
+    void PrintError(char const* file, int line, char const* message) const;
   };
 }
 
@@ -69,8 +74,11 @@ namespace tst
   /**
    * The default constructor creates an empty DefaultResult object.
    */
-  inline DefaultResult::DefaultResult()
-    : test_id_(0),
+  template<typename T>
+  inline DefaultResult<T>::DefaultResult(T& printer, bool verbose)
+    : printer_(&printer),
+      verbose_(verbose),
+      test_id_(0),
       tests_run_(0),
       tests_failed_(0),
       assertions_checked_(0),
@@ -82,23 +90,22 @@ namespace tst
   /**
    * @copydoc TestResult::StartTest
    */
-  inline void DefaultResult::StartTest(char const* test)
+  template<typename T>
+  void DefaultResult<T>::StartTest(char const* test)
   {
     test_id_++;
     tests_run_++;
     current_test_ = test;
-
-    PrintTestMessage("StartTest");
   }
 
   /**
    * @copydoc TestResult::EndTest
    */
-  inline void DefaultResult::EndTest()
+  template<typename T>
+  void DefaultResult<T>::EndTest()
   {
-    PrintTestMessage("EndTest");
-
-    std::cout << '\n';
+    if (verbose_)
+      PrintTestResult();
 
     current_test_ = 0;
   }
@@ -106,7 +113,8 @@ namespace tst
   /**
    * @copydoc TestResult::Assert
    */
-  inline void DefaultResult::Assert(bool assertion, char const* file, int line, char const* message)
+  template<typename T>
+  void DefaultResult<T>::Assert(bool assertion, char const* file, int line, char const* message)
   {
     assertions_checked_++;
 
@@ -115,23 +123,29 @@ namespace tst
       assertions_failed_++;
 
       if (last_failed_ != test_id_)
+      {
         tests_failed_++;
+        last_failed_ = test_id_;
+      }
 
-      last_failed_ = test_id_;
-
-      std::cout << "Error: " << file << " (" << line << ")";
-
-      if (message != 0)
-        std::cout << ": " << message;
-
-      std::cout << '\n';
+      PrintError(file, line, message);
     }
+  }
+
+  template<typename T>
+  void DefaultResult<T>::PrintSummary()
+  {
+    (*printer_) << "Tests run:          " << GetTestsRun()          << '\n';
+    (*printer_) << "Tests failed:       " << GetTestsFailed()       << '\n';
+    (*printer_) << "Assertions checked: " << GetAssertionsChecked() << '\n';
+    (*printer_) << "Assertions failed:  " << GetAssertionsFailed()  << '\n';
   }
 
   /**
    * @return number of tests that were run
    */
-  inline int DefaultResult::GetTestsRun() const
+  template<typename T>
+  inline int DefaultResult<T>::GetTestsRun() const
   {
     return tests_run_;
   }
@@ -142,7 +156,8 @@ namespace tst
    *       fail, the test will continue (and other assertions might fail
    *       as well) but it will be recorded as one failed test
    */
-  inline int DefaultResult::GetTestsFailed() const
+  template<typename T>
+  inline int DefaultResult<T>::GetTestsFailed() const
   {
     return tests_failed_;
   }
@@ -150,7 +165,8 @@ namespace tst
   /**
    * @return number of assertions that were checked
    */
-  inline int DefaultResult::GetAssertionsChecked() const
+  template<typename T>
+  inline int DefaultResult<T>::GetAssertionsChecked() const
   {
     return assertions_checked_;
   }
@@ -158,23 +174,44 @@ namespace tst
   /**
    * @return number of assertions that were checked and that failed
    */
-  inline int DefaultResult::GetAssertionsFailed() const
+  template<typename T>
+  inline int DefaultResult<T>::GetAssertionsFailed() const
   {
     return assertions_failed_;
   }
 
   /**
-   * This small helper method prints out a message and optionally the
-   * content of the current_test_ variable (if not null).
+   * This small helper method prints the result for the current test.
    */
-  inline void DefaultResult::PrintTestMessage(char const* message) const
+  template<typename T>
+  void DefaultResult<T>::PrintTestResult() const
   {
-    std::cout << message;
+    // if the test has a name we print that, otherwise we use the id
+    if (current_test_ != 0)
+      (*printer_) << current_test_;
+    else
+      (*printer_) << test_id_;
+
+    (*printer_) << ": " << (last_failed_ != test_id_ ? "Successful" : "Failed") << '\n';
+  }
+
+  /**
+   * @param file file the error occurred in
+   * @param line line the error occurred in
+   * @param message optional message to print (may be null)
+   */
+  template<typename T>
+  void DefaultResult<T>::PrintError(char const* file, int line, char const* message) const
+  {
+    (*printer_) << "Error: " << file << " (" << line << ")";
 
     if (current_test_ != 0)
-      std::cout << ":\t" << current_test_;
+      (*printer_) << ": " << current_test_;
 
-    std::cout << '\n';
+    if (message != 0)
+      (*printer_) << ": " << message;
+
+    (*printer_) << '\n';
   }
 }
 

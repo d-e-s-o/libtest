@@ -17,6 +17,8 @@
  *   along with this program.  If not, see <http://www.gnu.org/licenses/>. *
  ***************************************************************************/
 
+#include <iostream>
+
 #include <test/TestCase.hpp>
 #include <test/TestSuite.hpp>
 #include <test/DefaultResult.hpp>
@@ -71,8 +73,8 @@ public:
 
 int main()
 {
-  tst::DefaultResult result;
-  tst::TestSuite     suite;
+  tst::DefaultResult<std::ostream> result(std::cout, true);
+  tst::TestSuite                   suite;
 
   MyTest1 my_test1;
   MyTest2 my_test2;
@@ -80,14 +82,13 @@ int main()
   suite.Add(my_test1);
   suite.Add(my_test2);
 
+  std::cout << "Running Tests...\n";
+
   suite.Run(result);
 
   std::cout << "-----------------------------\n";
   std::cout << "Summary:\n";
-  std::cout << "Tests run:          " << result.GetTestsRun()          << '\n';
-  std::cout << "Tests failed:       " << result.GetTestsFailed()       << '\n';
-  std::cout << "Assertions checked: " << result.GetAssertionsChecked() << '\n';
-  std::cout << "Assertions failed:  " << result.GetAssertionsFailed()  << '\n';
 
+  result.PrintSummary();
   return 0;
 }
