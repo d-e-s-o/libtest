@@ -117,9 +117,13 @@ namespace tst
 
     for (typename Tests::Iterator it = tests_.Begin(); it != tests_.End(); ++it)
     {
+      result.StartTestFunction();
+
       SetUp();
       (instance_->*(*it))(result);
       TearDown();
+
+      result.EndTestFunction();
     }
 
     result.EndTest();

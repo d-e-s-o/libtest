@@ -44,6 +44,19 @@ namespace tst
     virtual void EndTest() = 0;
 
     /**
+     * This method marks the beginning of a new test function
+     * invocation. The method is invoked automatically by the
+     * framework.
+     */
+    virtual void StartTestFunction() = 0;
+
+    /**
+     * This method marks the end of a test function invocation. The
+     * method is invoked automatically by the framework.
+     */
+    virtual void EndTestFunction() = 0;
+
+    /**
      * Assert that a condition holds.
      * @param assertion condition to check
      * @param file file in which the assertion failure occurred

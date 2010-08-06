@@ -39,12 +39,18 @@ namespace tst
     virtual void StartTest(char const* test);
     virtual void EndTest();
 
+    virtual void StartTestFunction();
+    virtual void EndTestFunction();
+
     virtual void Assert(bool assertion, char const* file, int line, char const* message);
 
     void PrintSummary();
 
     int GetTestsRun() const;
     int GetTestsFailed() const;
+
+    int GetFunctionsRun() const;
+    int GetFunctionsFailed() const;
 
     int GetAssertionsChecked() const;
     int GetAssertionsFailed() const;
@@ -54,15 +60,21 @@ namespace tst
     bool verbose_;
 
     int test_id_;
-
     int tests_run_;
     int tests_failed_;
+
+    int function_id_;
+    int functions_run_;
+    int functions_failed_;
+    int functions_run_this_test_;
+    int functions_failed_this_test_;
 
     int assertions_checked_;
     int assertions_failed_;
 
     char const* current_test_;
-    int last_failed_;
+    int last_failed_test_;
+    int last_failed_function_;
 
     void PrintTestResult() const;
     void PrintError(char const* file, int line, char const* message) const;
@@ -81,9 +93,16 @@ namespace tst
       test_id_(0),
       tests_run_(0),
       tests_failed_(0),
+      function_id_(0),
+      functions_run_(0),
+      functions_failed_(0),
+      functions_run_this_test_(0),
+      functions_failed_this_test_(0),
       assertions_checked_(0),
       assertions_failed_(0),
-      current_test_(0)
+      current_test_(0),
+      last_failed_test_(0),
+      last_failed_function_(0)
   {
   }
 
@@ -95,6 +114,10 @@ namespace tst
   {
     test_id_++;
     tests_run_++;
+
+    functions_run_this_test_ = 0;
+    functions_failed_this_test_ = 0;
+
     current_test_ = test;
   }
 
@@ -111,6 +134,25 @@ namespace tst
   }
 
   /**
+   * @copydoc TestResult::StartTestFunction
+   */
+  template<typename T>
+  void DefaultResult<T>::StartTestFunction()
+  {
+    function_id_++;
+  }
+
+  /**
+   * @copydoc TestResult::EndTestFunction
+   */
+  template<typename T>
+  void DefaultResult<T>::EndTestFunction()
+  {
+    functions_run_this_test_++;
+    functions_run_++;
+  }
+
+  /**
    * @copydoc TestResult::Assert
    */
   template<typename T>
@@ -122,10 +164,18 @@ namespace tst
     {
       assertions_failed_++;
 
-      if (last_failed_ != test_id_)
+      if (last_failed_test_ != test_id_)
       {
         tests_failed_++;
-        last_failed_ = test_id_;
+        last_failed_test_ = test_id_;
+      }
+
+      if (last_failed_function_ != function_id_)
+      {
+        functions_failed_++;
+        functions_failed_this_test_++;
+
+        last_failed_function_ = function_id_;
       }
 
       PrintError(file, line, message);
@@ -137,6 +187,8 @@ namespace tst
   {
     (*printer_) << "Tests run:          " << GetTestsRun()          << '\n';
     (*printer_) << "Tests failed:       " << GetTestsFailed()       << '\n';
+    (*printer_) << "Functions run:      " << GetFunctionsRun()      << '\n';
+    (*printer_) << "Functions failed:   " << GetFunctionsFailed()   << '\n';
     (*printer_) << "Assertions checked: " << GetAssertionsChecked() << '\n';
     (*printer_) << "Assertions failed:  " << GetAssertionsFailed()  << '\n';
   }
@@ -160,6 +212,24 @@ namespace tst
   inline int DefaultResult<T>::GetTestsFailed() const
   {
     return tests_failed_;
+  }
+
+  /**
+   * @return number of test functions that were run
+   */
+  template<typename T>
+  inline int DefaultResult<T>::GetFunctionsRun() const
+  {
+    return functions_run_;
+  }
+
+  /**
+   * @return number of test functions that were run and that failed
+   */
+  template<typename T>
+  inline int DefaultResult<T>::GetFunctionsFailed() const
+  {
+    return functions_failed_;
   }
 
   /**
@@ -192,7 +262,12 @@ namespace tst
     else
       (*printer_) << test_id_;
 
-    (*printer_) << ": " << (last_failed_ != test_id_ ? "Successful" : "Failed") << '\n';
+    int successful = functions_run_this_test_ - functions_failed_this_test_;
+    int percentage = successful * 100 / functions_run_this_test_;
+
+    (*printer_) << ":\n\t";
+    (*printer_) << successful << '/' << functions_run_this_test_ << " (" << percentage << "%)"
+                << ":\t" << (last_failed_test_ != test_id_ ? "Successful" : "Failed") << '\n';
   }
 
   /**
@@ -203,7 +278,7 @@ namespace tst
   template<typename T>
   void DefaultResult<T>::PrintError(char const* file, int line, char const* message) const
   {
-    (*printer_) << "Error: " << file << " (" << line << ")";
+    (*printer_) << "\tError: " << file << " (" << line << ")";
 
     if (current_test_ != 0)
       (*printer_) << ": " << current_test_;
