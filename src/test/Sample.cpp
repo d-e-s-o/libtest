@@ -76,11 +76,8 @@ int main()
   tst::DefaultResult<std::ostream> result(std::cout, true);
   tst::TestSuite                   suite;
 
-  MyTest1 my_test1;
-  MyTest2 my_test2;
-
-  suite.Add(my_test1);
-  suite.Add(my_test2);
+  suite.Add(tst::CreateTestCase<MyTest1>());
+  suite.Add(tst::CreateTestCase<MyTest2>());
 
   std::cout << "Running Tests...\n";
 

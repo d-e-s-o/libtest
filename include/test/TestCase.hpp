@@ -56,6 +56,15 @@ namespace tst
 
 
   /**
+   * This little helper function creates and returns a statically
+   * allocated instance of the given test case. This allows some more
+   * convinient creating and adding to suites.
+   */
+  template<typename T>
+  T& CreateTestCase();
+
+
+  /**
    * Test that an assertion holds, include the given message in the
    * reported error if not.
    * @param assertion_ boolean value to check for trueness
@@ -77,6 +86,16 @@ namespace tst
 
 namespace tst
 {
+  /**
+   * @return a newly created test case
+   */
+  template<typename T>
+  inline T& CreateTestCase()
+  {
+    static T t;
+    return t;
+  }
+
   /**
    * The default constructor creates an empty TestCase.
    */

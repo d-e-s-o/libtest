@@ -21,6 +21,7 @@
 #define TSTTESTSUITE_HPP
 
 #include "TestBase.hpp"
+#include "TestContainer.hpp"
 
 
 namespace tst
