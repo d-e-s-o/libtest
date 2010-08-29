@@ -29,6 +29,8 @@ namespace tst
   class TestResult
   {
   public:
+    virtual ~TestResult();
+
     /**
      * This method marks the beginning of a new test case to run. The
      * method is invoked automatically by the framework.
@@ -67,6 +69,14 @@ namespace tst
      */
     virtual void Assert(bool assertion, char const* file, int line, char const* message = 0) = 0;
   };
+}
+
+namespace tst
+{
+  /** Destroy the test result object. */
+  inline TestResult::~TestResult()
+  {
+  }
 }
 
 

@@ -33,9 +33,19 @@ namespace tst
   class TestBase
   {
   public:
+    virtual ~TestBase();
+
     /** Run all tests. */
     virtual void Run(TestResult& result) = 0;
   };
+}
+
+namespace tst
+{
+  /** Destroy the test. */
+  inline TestBase::~TestBase()
+  {
+  }
 }
 
 
