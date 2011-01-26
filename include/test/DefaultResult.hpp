@@ -1,7 +1,7 @@
 // DefaultResult.hpp
 
 /***************************************************************************
- *   Copyright (C) 2009-2010 Daniel Mueller (deso@posteo.net)              *
+ *   Copyright (C) 2009-2011 Daniel Mueller (deso@posteo.net)              *
  *                                                                         *
  *   This program is free software: you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -263,7 +263,7 @@ namespace tst
       (*printer_) << test_id_;
 
     int successful = functions_run_this_test_ - functions_failed_this_test_;
-    int percentage = successful * 100 / functions_run_this_test_;
+    int percentage = functions_run_ > 0 ? successful * 100 / functions_run_this_test_ : 100;
 
     (*printer_) << ":\n\t";
     (*printer_) << successful << '/' << functions_run_this_test_ << " (" << percentage << "%)"
