@@ -1,7 +1,7 @@
 // TestCase.hpp
 
 /***************************************************************************
- *   Copyright (C) 2009-2010 Daniel Mueller (deso@posteo.net)              *
+ *   Copyright (C) 2009-2010,2012 Daniel Mueller (deso@posteo.net)         *
  *                                                                         *
  *   This program is free software: you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -38,12 +38,12 @@ namespace tst
 
     TestCase(T& instance, char const* name = 0);
 
-    virtual void Run(TestResult& result);
-    virtual bool Add(Test const& test);
+    virtual void run(TestResult& result);
+    virtual bool add(Test const& test);
 
   protected:
-    virtual void SetUp();
-    virtual void TearDown();
+    virtual void setUp();
+    virtual void tearDown();
 
   private:
     /* We have a fixed upper limit of tests that we support. */
@@ -61,7 +61,7 @@ namespace tst
    * convinient creating and adding to suites.
    */
   template<typename T>
-  T& CreateTestCase();
+  T& createTestCase();
 
 
   /**
@@ -73,7 +73,7 @@ namespace tst
   #define ASSERTM(assertion_, message_)\
     do\
     {\
-      result.Assert((assertion_), __FILE__, __LINE__, message_);\
+      result.assert((assertion_), __FILE__, __LINE__, message_);\
     } while (false)
 
   /**
@@ -90,7 +90,7 @@ namespace tst
    * @return a newly created test case
    */
   template<typename T>
-  inline T& CreateTestCase()
+  inline T& createTestCase()
   {
     static T t;
     return t;
@@ -108,25 +108,25 @@ namespace tst
   }
 
   /**
-   * @copydoc TestBase::Run
+   * @copydoc TestBase::run
    */
   template<typename T>
-  inline void TestCase<T>::Run(TestResult& result)
+  inline void TestCase<T>::run(TestResult& result)
   {
-    result.StartTest(name_);
+    result.startTest(name_);
 
-    for (typename Tests::Iterator it = tests_.Begin(); it != tests_.End(); ++it)
+    for (typename Tests::Iterator it = tests_.begin(); it != tests_.end(); ++it)
     {
-      result.StartTestFunction();
+      result.startTestFunction();
 
-      SetUp();
+      setUp();
       (instance_->*(*it))(result);
-      TearDown();
+      tearDown();
 
-      result.EndTestFunction();
+      result.endTestFunction();
     }
 
-    result.EndTest();
+    result.endTest();
   }
 
   /**
@@ -136,10 +136,10 @@ namespace tst
    * @return true if adding the test was successful, false if not
    */
   template<typename T>
-  inline bool TestCase<T>::Add(Test const& test)
+  inline bool TestCase<T>::add(Test const& test)
   {
     if (test != 0)
-      return tests_.Add(test);
+      return tests_.add(test);
 
     return false;
   }
@@ -149,7 +149,7 @@ namespace tst
    * before each test.
    */
   template<typename T>
-  inline void TestCase<T>::SetUp()
+  inline void TestCase<T>::setUp()
   {
   }
 
@@ -158,7 +158,7 @@ namespace tst
    * done in setUp. It is called right after the test finished.
    */
   template<typename T>
-  inline void TestCase<T>::TearDown()
+  inline void TestCase<T>::tearDown()
   {
   }
 }

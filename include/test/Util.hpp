@@ -23,7 +23,7 @@
 
 namespace tst
 {
-  bool LogicalXor(bool lhs, bool rhs);
+  bool logicalXor(bool lhs, bool rhs);
 }
 
 
@@ -34,7 +34,7 @@ namespace tst
    * @param rhs second parameter
    * @return logical exclusive OR of the two parameters
    */
-  inline bool LogicalXor(bool lhs, bool rhs)
+  inline bool logicalXor(bool lhs, bool rhs)
   {
     return (lhs && !rhs) || (!lhs && rhs);
   }

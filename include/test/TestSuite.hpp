@@ -1,7 +1,7 @@
 // TestSuite.hpp
 
 /***************************************************************************
- *   Copyright (C) 2009-2010 Daniel Mueller (deso@posteo.net)              *
+ *   Copyright (C) 2009-2010,2012 Daniel Mueller (deso@posteo.net)         *
  *                                                                         *
  *   This program is free software: you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -35,8 +35,8 @@ namespace tst
   public:
     TestSuite();
 
-    virtual void Run(TestResult& result);
-    virtual bool Add(TestBase& test);
+    virtual void run(TestResult& result);
+    virtual bool add(TestBase& test);
 
   private:
     typedef TestContainer<TestBase*, 256> Tests;
@@ -56,22 +56,22 @@ namespace tst
   }
 
   /**
-   * @copydoc TestBase::Run
+   * @copydoc TestBase::run
    */
-  inline void TestSuite::Run(TestResult& result)
+  inline void TestSuite::run(TestResult& result)
   {
-    for (Tests::Iterator it = tests_.Begin(); it != tests_.End(); ++it)
-      (*it)->Run(result);
+    for (Tests::Iterator it = tests_.begin(); it != tests_.end(); ++it)
+      (*it)->run(result);
   }
 
   /**
    * This method can be used to add a new test (typically a TestSuite or
    * a TestCase) to the list of tests to execute.
    */
-  inline bool TestSuite::Add(TestBase& test)
+  inline bool TestSuite::add(TestBase& test)
   {
     if (&test != this)
-      return tests_.Add(&test);
+      return tests_.add(&test);
 
     return false;
   }

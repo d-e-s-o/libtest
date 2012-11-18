@@ -1,7 +1,7 @@
 // TestResult.hpp
 
 /***************************************************************************
- *   Copyright (C) 2009-2010 Daniel Mueller (deso@posteo.net)              *
+ *   Copyright (C) 2009-2010,2012 Daniel Mueller (deso@posteo.net)         *
  *                                                                         *
  *   This program is free software: you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -36,27 +36,27 @@ namespace tst
      * method is invoked automatically by the framework.
      * @param test name of the test case that is about to be run
      */
-    virtual void StartTest(char const* test) = 0;
+    virtual void startTest(char const* test) = 0;
 
     /**
      * This method marks the end of a test case previously started using
      * 'startTest'. The method is invoked automatically by the
      * framework.
      */
-    virtual void EndTest() = 0;
+    virtual void endTest() = 0;
 
     /**
      * This method marks the beginning of a new test function
      * invocation. The method is invoked automatically by the
      * framework.
      */
-    virtual void StartTestFunction() = 0;
+    virtual void startTestFunction() = 0;
 
     /**
      * This method marks the end of a test function invocation. The
      * method is invoked automatically by the framework.
      */
-    virtual void EndTestFunction() = 0;
+    virtual void endTestFunction() = 0;
 
     /**
      * Assert that a condition holds.
@@ -67,7 +67,7 @@ namespace tst
      * @param message an optional message conveying additional
      *        information to the user
      */
-    virtual void Assert(bool assertion, char const* file, int line, char const* message = 0) = 0;
+    virtual void assert(bool assertion, char const* file, int line, char const* message = 0) = 0;
   };
 }
 

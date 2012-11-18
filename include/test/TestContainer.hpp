@@ -1,7 +1,7 @@
 // TestContainer.hpp
 
 /***************************************************************************
- *   Copyright (C) 2009-2010 Daniel Mueller (deso@posteo.net)              *
+ *   Copyright (C) 2009-2010,2012 Daniel Mueller (deso@posteo.net)         *
  *                                                                         *
  *   This program is free software: you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -36,10 +36,10 @@ namespace tst
 
     TestContainer();
 
-    bool Add(T const& test);
+    bool add(T const& test);
 
-    Iterator Begin();
-    Iterator End();
+    Iterator begin();
+    Iterator end();
 
   private:
     T tests_[MAX_TESTS];
@@ -64,7 +64,7 @@ namespace tst
    * @return true if adding the test was successful, false if not
    */
   template<typename T, unsigned int MAX_TESTS>
-  inline bool TestContainer<T, MAX_TESTS>::Add(T const& test)
+  inline bool TestContainer<T, MAX_TESTS>::add(T const& test)
   {
     if (index_ < MAX_TESTS)
     {
@@ -78,7 +78,7 @@ namespace tst
    * @return an iterator to the first test in the container
    */
   template<typename T, unsigned int MAX_TESTS>
-  inline typename TestContainer<T, MAX_TESTS>::Iterator TestContainer<T, MAX_TESTS>::Begin()
+  inline typename TestContainer<T, MAX_TESTS>::Iterator TestContainer<T, MAX_TESTS>::begin()
   {
     return &tests_[0];
   }
@@ -87,7 +87,7 @@ namespace tst
    * @return an iterator to one past the last test in the container
    */
   template<typename T, unsigned int MAX_TESTS>
-  inline typename TestContainer<T, MAX_TESTS>::Iterator TestContainer<T, MAX_TESTS>::End()
+  inline typename TestContainer<T, MAX_TESTS>::Iterator TestContainer<T, MAX_TESTS>::end()
   {
     return &tests_[index_];
   }

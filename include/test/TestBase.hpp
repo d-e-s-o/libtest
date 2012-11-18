@@ -1,7 +1,7 @@
 // TestBase.hpp
 
 /***************************************************************************
- *   Copyright (C) 2009-2010 Daniel Mueller (deso@posteo.net)              *
+ *   Copyright (C) 2009-2010,2012 Daniel Mueller (deso@posteo.net)         *
  *                                                                         *
  *   This program is free software: you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -36,7 +36,7 @@ namespace tst
     virtual ~TestBase();
 
     /** Run all tests. */
-    virtual void Run(TestResult& result) = 0;
+    virtual void run(TestResult& result) = 0;
   };
 }
 

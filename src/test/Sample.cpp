@@ -1,7 +1,7 @@
 // Sample.cpp
 
 /***************************************************************************
- *   Copyright (C) 2009-2010 Daniel Mueller (deso@posteo.net)              *
+ *   Copyright (C) 2009-2010,2012 Daniel Mueller (deso@posteo.net)         *
  *                                                                         *
  *   This program is free software: you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -31,18 +31,18 @@ public:
   MyTest1()
     : tst::TestCase<MyTest1>(*this, "MyTest1")
   {
-    Add(&MyTest1::TestMe1);
-    Add(&MyTest1::TestMe2);
+    add(&MyTest1::testMe1);
+    add(&MyTest1::testMe2);
   }
 
   /** Illustrate the usage of the @ref ASSERTM functionality. */
-  void TestMe1(tst::TestResult& result)
+  void testMe1(tst::TestResult& result)
   {
     ASSERTM(false, "has to fail!");
   }
 
   /** Illustrate the usage of the @ref ASSERT functionality. */
-  void TestMe2(tst::TestResult& result)
+  void testMe2(tst::TestResult& result)
   {
     /* This invocation must not fail. */
     ASSERT(true);
@@ -56,16 +56,16 @@ public:
   MyTest2()
     : tst::TestCase<MyTest2>(*this, "MyTest2")
   {
-    Add(&MyTest2::TestMe1);
-    Add(&MyTest2::TestMe2);
+    add(&MyTest2::testMe1);
+    add(&MyTest2::testMe2);
   }
 
-  void TestMe1(tst::TestResult& result)
+  void testMe1(tst::TestResult& result)
   {
     ASSERTM(true, "must not fail!");
   }
 
-  void TestMe2(tst::TestResult& result)
+  void testMe2(tst::TestResult& result)
   {
     ASSERTM(true, "must not fail!");
   }
@@ -76,16 +76,16 @@ int main()
   tst::DefaultResult<std::ostream> result(std::cout, true);
   tst::TestSuite                   suite;
 
-  suite.Add(tst::CreateTestCase<MyTest1>());
-  suite.Add(tst::CreateTestCase<MyTest2>());
+  suite.add(tst::createTestCase<MyTest1>());
+  suite.add(tst::createTestCase<MyTest2>());
 
   std::cout << "Running Tests...\n";
 
-  suite.Run(result);
+  suite.run(result);
 
   std::cout << "-----------------------------\n";
   std::cout << "Summary:\n";
 
-  result.PrintSummary();
+  result.printSummary();
   return 0;
 }
