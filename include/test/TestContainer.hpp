@@ -36,6 +36,12 @@ namespace tst
 
     TestContainer();
 
+    TestContainer(TestContainer&&) = delete;
+    TestContainer(TestContainer const&) = delete;
+
+    TestContainer& operator =(TestContainer&&) = delete;
+    TestContainer& operator =(TestContainer const&) = delete;
+
     bool add(T const& test);
 
     Iterator begin();

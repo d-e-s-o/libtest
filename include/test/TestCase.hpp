@@ -36,7 +36,13 @@ namespace tst
   public:
     typedef void (T::*Test)(TestResult&);
 
-    TestCase(T& instance, char const* name = 0);
+    TestCase(T& instance, char const* name = nullptr);
+
+    TestCase(TestCase&&) = delete;
+    TestCase(TestCase const&) = delete;
+
+    TestCase& operator =(TestCase&&) = delete;
+    TestCase& operator =(TestCase const&) = delete;
 
     virtual void run(TestResult& result);
     virtual bool add(Test const& test);
@@ -81,7 +87,7 @@ namespace tst
    * @param assertion_ boolean value to check for trueness
    */
   #define ASSERT(assertion_)\
-    ASSERTM(assertion_, 0)
+    ASSERTM(assertion_, nullptr)
 }
 
 namespace tst
@@ -115,7 +121,7 @@ namespace tst
   {
     result.startTest(name_);
 
-    for (typename Tests::Iterator it = tests_.begin(); it != tests_.end(); ++it)
+    for (auto it = tests_.begin(); it != tests_.end(); ++it)
     {
       result.startTestFunction();
 
@@ -138,7 +144,7 @@ namespace tst
   template<typename T>
   inline bool TestCase<T>::add(Test const& test)
   {
-    if (test != 0)
+    if (test != nullptr)
       return tests_.add(test);
 
     return false;

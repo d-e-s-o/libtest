@@ -35,6 +35,12 @@ namespace tst
   public:
     TestSuite();
 
+    TestSuite(TestSuite&&) = delete;
+    TestSuite(TestSuite const&) = delete;
+
+    TestSuite& operator =(TestSuite&&) = delete;
+    TestSuite& operator =(TestSuite const&) = delete;
+
     virtual void run(TestResult& result);
     virtual bool add(TestBase& test);
 
@@ -60,7 +66,7 @@ namespace tst
    */
   inline void TestSuite::run(TestResult& result)
   {
-    for (Tests::Iterator it = tests_.begin(); it != tests_.end(); ++it)
+    for (auto it = tests_.begin(); it != tests_.end(); ++it)
       (*it)->run(result);
   }
 

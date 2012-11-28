@@ -29,7 +29,8 @@ namespace tst
   class TestResult
   {
   public:
-    virtual ~TestResult();
+    /** Destroy the test result object. */
+    virtual ~TestResult() = default;
 
     /**
      * This method marks the beginning of a new test case to run. The
@@ -69,14 +70,6 @@ namespace tst
      */
     virtual void assert(bool assertion, char const* file, int line, char const* message = 0) = 0;
   };
-}
-
-namespace tst
-{
-  /** Destroy the test result object. */
-  inline TestResult::~TestResult()
-  {
-  }
 }
 
 

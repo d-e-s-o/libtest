@@ -36,13 +36,13 @@ namespace tst
   public:
     DefaultResult(T& printer, bool verbose = false);
 
-    virtual void startTest(char const* test);
-    virtual void endTest();
+    virtual void startTest(char const* test) override;
+    virtual void endTest() override;
 
-    virtual void startTestFunction();
-    virtual void endTestFunction();
+    virtual void startTestFunction() override;
+    virtual void endTestFunction() override;
 
-    virtual void assert(bool assertion, char const* file, int line, char const* message);
+    virtual void assert(bool assertion, char const* file, int line, char const* message) override;
 
     void printSummary();
 
@@ -257,7 +257,7 @@ namespace tst
   void DefaultResult<T>::printTestResult() const
   {
     // if the test has a name we print that, otherwise we use the id
-    if (current_test_ != 0)
+    if (current_test_ != nullptr)
       (*printer_) << current_test_;
     else
       (*printer_) << test_id_;
@@ -280,10 +280,10 @@ namespace tst
   {
     (*printer_) << "\tError: " << file << " (" << line << ")";
 
-    if (current_test_ != 0)
+    if (current_test_ != nullptr)
       (*printer_) << ": " << current_test_;
 
-    if (message != 0)
+    if (message != nullptr)
       (*printer_) << ": " << message;
 
     (*printer_) << '\n';
