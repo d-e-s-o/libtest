@@ -71,6 +71,16 @@ namespace tst
 
 
   /**
+   * Test framework exception used for signaling fatal assertion
+   * failures, i.e., ones that have to terminate the current test
+   * function.
+   */
+  struct FatalFailure
+  {
+  };
+
+
+  /**
    * Test that an assertion holds, include the given message in the
    * reported error if not.
    * @param assertion_ boolean value to check for trueness
@@ -88,6 +98,27 @@ namespace tst
    */
   #define ASSERT(assertion_)\
     ASSERTM(assertion_, nullptr)
+
+  /**
+   * Test that an assertion holds, exit current test (and print
+   * message) if not.
+   * @param assertion_ boolean value to check for trueness
+   * @param message_ message to include in error report
+   */
+  #define ASSERTFATALM(assertion_, message_)\
+    do\
+    {\
+      auto success = result.assert((assertion_), __FILE__, __LINE__);\
+      if (!success)\
+        throw tst::FatalFailure();\
+    } while(false)
+
+  /**
+   * Test that an assertion holds, exit current test if not.
+   * @param assertion_ boolean value to check for trueness
+   */
+  #define ASSERTFATAL(assertion_)\
+    ASSERTFATALM(assertion_, nullptr)
 }
 
 namespace tst
@@ -124,11 +155,28 @@ namespace tst
     for (auto it = tests_.begin(); it != tests_.end(); ++it)
     {
       result.startTestFunction();
-
       setUp();
-      (instance_->*(*it))(result);
-      tearDown();
 
+      try
+      {
+        /* Run the test method. */
+        (instance_->*(*it))(result);
+      }
+      catch(FatalFailure const& failure)
+      {
+        /* There is nothing to be done here. */
+      }
+      catch(...)
+      {
+        /*
+         * @todo It would be great to report the correct file and line
+         *       number here, but that would require pretty
+         *       sophisticated means.
+         */
+        ASSERTM(false, "Unexpected exception");
+      }
+
+      tearDown();
       result.endTestFunction();
     }
 

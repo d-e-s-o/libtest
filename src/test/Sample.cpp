@@ -33,6 +33,7 @@ public:
   {
     add(&MyTest1::testMe1);
     add(&MyTest1::testMe2);
+    add(&MyTest1::testMe3);
   }
 
   /** Illustrate the usage of the @ref ASSERTM functionality. */
@@ -47,6 +48,21 @@ public:
     /* This invocation must not fail. */
     ASSERT(true);
   }
+
+  /** Illustrate the usage of the @ref ASSERTFATALM functionality. */
+  void testMe3(tst::TestResult& result)
+  {
+    /* Control flow will leave the function here. */
+    ASSERTFATALM(queryCondition(), "premature exit!");
+    ASSERTM(false, "will not be reached!");
+  }
+
+private:
+  /** @return false */
+  bool queryCondition() const
+  {
+    return false;
+  }
 };
 
 class MyTest2: public tst::TestCase<MyTest2>
@@ -58,6 +74,7 @@ public:
   {
     add(&MyTest2::testMe1);
     add(&MyTest2::testMe2);
+    add(&MyTest2::testMe3);
   }
 
   void testMe1(tst::TestResult& result)
@@ -68,6 +85,12 @@ public:
   void testMe2(tst::TestResult& result)
   {
     ASSERTM(true, "must not fail!");
+  }
+
+  /** Illustrate the usage of the @ref ASSERTFATAL functionality. */
+  void testMe3(tst::TestResult& result)
+  {
+    ASSERTFATAL(true);
   }
 };
 

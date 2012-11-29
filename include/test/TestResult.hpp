@@ -68,7 +68,7 @@ namespace tst
      * @param message an optional message conveying additional
      *        information to the user
      */
-    virtual void assert(bool assertion, char const* file, int line, char const* message = 0) = 0;
+    virtual bool assert(bool assertion, char const* file, int line, char const* message = 0) = 0;
   };
 }
 

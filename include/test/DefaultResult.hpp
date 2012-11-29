@@ -42,7 +42,7 @@ namespace tst
     virtual void startTestFunction() override;
     virtual void endTestFunction() override;
 
-    virtual void assert(bool assertion, char const* file, int line, char const* message) override;
+    virtual bool assert(bool assertion, char const* file, int line, char const* message) override;
 
     void printSummary();
 
@@ -156,7 +156,7 @@ namespace tst
    * @copydoc TestResult::assert
    */
   template<typename T>
-  void DefaultResult<T>::assert(bool assertion, char const* file, int line, char const* message)
+  bool DefaultResult<T>::assert(bool assertion, char const* file, int line, char const* message)
   {
     assertions_checked_++;
 
@@ -179,7 +179,9 @@ namespace tst
       }
 
       printError(file, line, message);
+      return false;
     }
+    return true;
   }
 
   template<typename T>
