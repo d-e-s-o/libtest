@@ -1,7 +1,7 @@
 // TestCase.hpp
 
 /***************************************************************************
- *   Copyright (C) 2009-2010,2012 Daniel Mueller (deso@posteo.net)         *
+ *   Copyright (C) 2009-2010,2012-2013 Daniel Mueller (deso@posteo.net)    *
  *                                                                         *
  *   This program is free software: you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -86,7 +86,7 @@ namespace tst
    * @param assertion_ boolean value to check for trueness
    * @param message_ message to include in error report
    */
-  #define ASSERTM(assertion_, message_)\
+  #define TESTASSERTM(assertion_, message_)\
     do\
     {\
       result.assert((assertion_), __FILE__, __LINE__, message_);\
@@ -96,8 +96,8 @@ namespace tst
    * Test that an assertion holds.
    * @param assertion_ boolean value to check for trueness
    */
-  #define ASSERT(assertion_)\
-    ASSERTM(assertion_, nullptr)
+  #define TESTASSERT(assertion_)\
+    TESTASSERTM(assertion_, nullptr)
 
   /**
    * Test that an assertion holds, exit current test (and print
@@ -105,7 +105,7 @@ namespace tst
    * @param assertion_ boolean value to check for trueness
    * @param message_ message to include in error report
    */
-  #define ASSERTFATALM(assertion_, message_)\
+  #define TESTASSERTFATALM(assertion_, message_)\
     do\
     {\
       auto success = result.assert((assertion_), __FILE__, __LINE__);\
@@ -117,8 +117,8 @@ namespace tst
    * Test that an assertion holds, exit current test if not.
    * @param assertion_ boolean value to check for trueness
    */
-  #define ASSERTFATAL(assertion_)\
-    ASSERTFATALM(assertion_, nullptr)
+  #define TESTASSERTFATAL(assertion_)\
+    TESTASSERTFATALM(assertion_, nullptr)
 }
 
 namespace tst
@@ -173,7 +173,7 @@ namespace tst
          *       number here, but that would require pretty
          *       sophisticated means.
          */
-        ASSERTM(false, "Unexpected exception");
+        TESTASSERTM(false, "Unexpected exception");
       }
 
       tearDown();

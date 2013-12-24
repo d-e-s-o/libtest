@@ -1,7 +1,7 @@
 // Sample.cpp
 
 /***************************************************************************
- *   Copyright (C) 2009-2010,2012 Daniel Mueller (deso@posteo.net)         *
+ *   Copyright (C) 2009-2010,2012-2013 Daniel Mueller (deso@posteo.net)    *
  *                                                                         *
  *   This program is free software: you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -36,25 +36,25 @@ public:
     add(&MyTest1::testMe3);
   }
 
-  /** Illustrate the usage of the @ref ASSERTM functionality. */
+  /** Illustrate the usage of the @ref TESTASSERTM functionality. */
   void testMe1(tst::TestResult& result)
   {
-    ASSERTM(false, "has to fail!");
+    TESTASSERTM(false, "has to fail!");
   }
 
-  /** Illustrate the usage of the @ref ASSERT functionality. */
+  /** Illustrate the usage of the @ref TESTASSERT functionality. */
   void testMe2(tst::TestResult& result)
   {
     /* This invocation must not fail. */
-    ASSERT(true);
+    TESTASSERT(true);
   }
 
-  /** Illustrate the usage of the @ref ASSERTFATALM functionality. */
+  /** Illustrate the usage of the @ref TESTASSERTFATALM functionality. */
   void testMe3(tst::TestResult& result)
   {
     /* Control flow will leave the function here. */
-    ASSERTFATALM(queryCondition(), "premature exit!");
-    ASSERTM(false, "will not be reached!");
+    TESTASSERTFATALM(queryCondition(), "premature exit!");
+    TESTASSERTM(false, "will not be reached!");
   }
 
 private:
@@ -79,18 +79,18 @@ public:
 
   void testMe1(tst::TestResult& result)
   {
-    ASSERTM(true, "must not fail!");
+    TESTASSERTM(true, "must not fail!");
   }
 
   void testMe2(tst::TestResult& result)
   {
-    ASSERTM(true, "must not fail!");
+    TESTASSERTM(true, "must not fail!");
   }
 
-  /** Illustrate the usage of the @ref ASSERTFATAL functionality. */
+  /** Illustrate the usage of the @ref TESTASSERTFATAL functionality. */
   void testMe3(tst::TestResult& result)
   {
-    ASSERTFATAL(true);
+    TESTASSERTFATAL(true);
   }
 };
 
