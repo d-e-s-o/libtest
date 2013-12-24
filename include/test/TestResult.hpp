@@ -1,7 +1,7 @@
 // TestResult.hpp
 
 /***************************************************************************
- *   Copyright (C) 2009-2010,2012 Daniel Mueller (deso@posteo.net)         *
+ *   Copyright (C) 2009-2010,2012-2013 Daniel Mueller (deso@posteo.net)    *
  *                                                                         *
  *   This program is free software: you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -60,15 +60,23 @@ namespace tst
     virtual void endTestFunction() = 0;
 
     /**
-     * Assert that a condition holds.
-     * @param assertion condition to check
+     * Tell this object that an assertion is about to be checked. This
+     * method is to be used for statistics keeping purposes.
+     * @param file file in which the assertion check occurred
+     * @param line line (in the given 'file') where the assertion check
+     *        occurred
+     */
+    virtual void checked(char const* file, int line) = 0;
+
+    /**
+     * Tell this object that an assertion failed.
      * @param file file in which the assertion failure occurred
      * @param line line (in the given 'file') where the assertion
      *        failure occurred
      * @param message an optional message conveying additional
      *        information to the user
      */
-    virtual bool assert(bool assertion, char const* file, int line, char const* message = 0) = 0;
+    virtual void failed(char const* file, int line, char const* message) = 0;
   };
 }
 

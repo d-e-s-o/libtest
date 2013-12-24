@@ -20,6 +20,10 @@
 #ifndef TSTTESTCASE_HPP
 #define TSTTESTCASE_HPP
 
+#define ASSERT_NO_DEFAULT_BACKEND
+#include <util/Assert.hpp>
+#undef ASSERT_NO_DEFAULT_BACKEND
+
 #include "TestBase.hpp"
 #include "TestResult.hpp"
 #include "TestContainer.hpp"
@@ -80,6 +84,17 @@ namespace tst
   };
 
 
+  /** @cond never */
+  #define FAIL_LAMBDA\
+    [&result](char const* assertion,\
+              char const* file,\
+              unsigned int line,\
+              char const* function)\
+    {\
+      result.failed(file, line, assertion);\
+    }
+  /** @endcond never */
+
   /**
    * Test that an assertion holds, include the given message in the
    * reported error if not.
@@ -89,7 +104,9 @@ namespace tst
   #define TESTASSERTM(assertion_, message_)\
     do\
     {\
-      result.assert((assertion_), __FILE__, __LINE__, message_);\
+      result.checked(__FILE__, __LINE__);\
+      if (!(assertion_))\
+        result.failed(__FILE__, __LINE__, message_);\
     } while (false)
 
   /**
@@ -97,7 +114,11 @@ namespace tst
    * @param assertion_ boolean value to check for trueness
    */
   #define TESTASSERT(assertion_)\
-    TESTASSERTM(assertion_, nullptr)
+    do\
+    {\
+      result.checked(__FILE__, __LINE__);\
+      ASSERT_IMPL(assertion_, FAIL_LAMBDA);\
+    } while (false)
 
   /**
    * Test that an assertion holds, exit current test (and print
@@ -108,9 +129,12 @@ namespace tst
   #define TESTASSERTFATALM(assertion_, message_)\
     do\
     {\
-      auto success = result.assert((assertion_), __FILE__, __LINE__);\
-      if (!success)\
+      result.checked(__FILE__, __LINE__);\
+      if (!(assertion_))\
+      {\
+        result.failed(__FILE__, __LINE__, message_);\
         throw tst::FatalFailure();\
+      }\
     } while(false)
 
   /**

@@ -1,7 +1,7 @@
 // DefaultResult.hpp
 
 /***************************************************************************
- *   Copyright (C) 2009-2012 Daniel Mueller (deso@posteo.net)              *
+ *   Copyright (C) 2009-2013 Daniel Mueller (deso@posteo.net)              *
  *                                                                         *
  *   This program is free software: you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -42,7 +42,8 @@ namespace tst
     virtual void startTestFunction() override;
     virtual void endTestFunction() override;
 
-    virtual bool assert(bool assertion, char const* file, int line, char const* message) override;
+    virtual void checked(char const* file, int line) override;
+    virtual void failed(char const* file, int line, char const* message) override;
 
     void printSummary();
 
@@ -153,35 +154,37 @@ namespace tst
   }
 
   /**
-   * @copydoc TestResult::assert
+   * @copydoc TestResult::checked
    */
   template<typename T>
-  bool DefaultResult<T>::assert(bool assertion, char const* file, int line, char const* message)
+  void DefaultResult<T>::checked(char const* file, int line)
   {
     assertions_checked_++;
+  }
 
-    if (!assertion)
+  /**
+   * @copydoc TestResult::failed
+   */
+  template<typename T>
+  void DefaultResult<T>::failed(char const* file, int line, char const* message)
+  {
+    assertions_failed_++;
+
+    if (last_failed_test_ != test_id_)
     {
-      assertions_failed_++;
-
-      if (last_failed_test_ != test_id_)
-      {
-        tests_failed_++;
-        last_failed_test_ = test_id_;
-      }
-
-      if (last_failed_function_ != function_id_)
-      {
-        functions_failed_++;
-        functions_failed_this_test_++;
-
-        last_failed_function_ = function_id_;
-      }
-
-      printError(file, line, message);
-      return false;
+      tests_failed_++;
+      last_failed_test_ = test_id_;
     }
-    return true;
+
+    if (last_failed_function_ != function_id_)
+    {
+      functions_failed_++;
+      functions_failed_this_test_++;
+
+      last_failed_function_ = function_id_;
+    }
+
+    printError(file, line, message);
   }
 
   template<typename T>
