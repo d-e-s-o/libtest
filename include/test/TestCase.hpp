@@ -1,7 +1,7 @@
 // TestCase.hpp
 
 /***************************************************************************
- *   Copyright (C) 2009-2010,2012-2013 Daniel Mueller (deso@posteo.net)    *
+ *   Copyright (C) 2009-2010,2012-2014 Daniel Mueller (deso@posteo.net)    *
  *                                                                         *
  *   This program is free software: you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -119,6 +119,22 @@ namespace tst
       result.checked(__FILE__, __LINE__);\
       ASSERT_IMPL(assertion_, FAIL_LAMBDA);\
     } while (false)
+
+  /**
+   * Test that an assertion holds.
+   *
+   * The given operation is applied to the two operands and the result
+   * is asserted.
+   * @param first_ the first parameter to the given operation
+   * @param operation_ the operation to apply to the two parameters
+   * @param second_ the second parameter to the operation
+   */
+  #define TESTASSERTOP(first_, operation_, second_)\
+    do\
+    {\
+      result.checked(__FILE__, __LINE__);\
+      ASSERTOP_IMPL(first_, operation_, second_, FAIL_LAMBDA);\
+    } while (0)
 
   /**
    * Test that an assertion holds, exit current test (and print

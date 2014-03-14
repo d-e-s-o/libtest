@@ -1,7 +1,7 @@
 // Sample.cpp
 
 /***************************************************************************
- *   Copyright (C) 2009-2010,2012-2013 Daniel Mueller (deso@posteo.net)    *
+ *   Copyright (C) 2009-2010,2012-2014 Daniel Mueller (deso@posteo.net)    *
  *                                                                         *
  *   This program is free software: you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -75,6 +75,7 @@ public:
     add(&MyTest2::testMe1);
     add(&MyTest2::testMe2);
     add(&MyTest2::testMe3);
+    add(&MyTest2::testMe4);
   }
 
   void testMe1(tst::TestResult& result)
@@ -91,6 +92,13 @@ public:
   void testMe3(tst::TestResult& result)
   {
     TESTASSERTFATAL(true);
+  }
+
+  /** Illustrate the usage of the @ref TESTASSERTOP functionality. */
+  void testMe4(tst::TestResult& result)
+  {
+    /* One is not less than one so this assertion will fail. */
+    TESTASSERTOP(1, lt, 1);
   }
 };
 
