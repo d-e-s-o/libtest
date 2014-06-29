@@ -157,6 +157,59 @@ namespace tst
    */
   #define TESTASSERTFATAL(assertion_)\
     TESTASSERTFATALM(assertion_, nullptr)
+
+  /** @cond never */
+  #define TESTTHROWSIMPL(exception_type_, expression_, message_)\
+    do\
+    {\
+      auto success = true;\
+      result.checked(__FILE__, __LINE__);\
+      try\
+      {\
+        expression_;\
+        success = false;\
+      }\
+      catch (exception_type_)\
+      {\
+      }\
+      if (!success)\
+        result.failed(__FILE__, __LINE__, message_);\
+    } while(false)
+  /** @endcond never */
+
+  /**
+   * Test that an expression throws any exception.
+   * @param expression_ expression to execute
+   */
+  #define TESTTHROWSANY(expression_)\
+    TESTTHROWSIMPL(..., expression_, nullptr)
+
+  /**
+   * Test that an expression throws any exception, include the given
+   * message in the reported error if not.
+   * @param expression_ expression to execute
+   * @param message_ message to include in error report
+   */
+  #define TESTTHROWSANYM(expression_, message_)\
+    TESTTHROWSIMPL(..., expression_, message_)
+
+  /**
+   * Test that an expression throws a specific exception.
+   * @param exception_type_ type of the exception expected
+   * @param expression_ expression to execute
+   */
+  #define TESTTHROWS(exception_type_, expression_)\
+    TESTTHROWSIMPL(exception_type_, expression_, nullptr)
+
+  /**
+   * Test that an expression throws a specific exception, include the
+   * given message in the reported error if not.
+   * @param exception_type_ type of the exception expected
+   * @param expression_ expression to execute
+   * @param message_ message to include in error report
+   */
+  #define TESTTHROWSM(exception_type_, expression_, message_)\
+    TESTTHROWSIMPL(exception_type_, expression_, message_)
 }
 
 namespace tst

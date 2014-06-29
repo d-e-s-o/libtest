@@ -34,6 +34,7 @@ public:
     add(&MyTest1::testMe1);
     add(&MyTest1::testMe2);
     add(&MyTest1::testMe3);
+    add(&MyTest1::testMe4);
   }
 
   /** Illustrate the usage of the @ref TESTASSERTM functionality. */
@@ -57,6 +58,12 @@ public:
     TESTASSERTM(false, "will not be reached!");
   }
 
+  /** Illustrate the usage of the @ref TESTTHROWSANYM functionality. */
+  void testMe4(tst::TestResult& result)
+  {
+    TESTTHROWSANYM(1 > 42 ? throw 42 : (void)1, "no error raised!");
+  }
+
 private:
   /** @return false */
   bool queryCondition() const
@@ -76,6 +83,7 @@ public:
     add(&MyTest2::testMe2);
     add(&MyTest2::testMe3);
     add(&MyTest2::testMe4);
+    add(&MyTest2::testMe5);
   }
 
   void testMe1(tst::TestResult& result)
@@ -99,6 +107,12 @@ public:
   {
     /* One is not less than one so this assertion will fail. */
     TESTASSERTOP(1, lt, 1);
+  }
+
+  /** Illustrate the usage of the @ref TESTTHROWSM functionality. */
+  void testMe5(tst::TestResult& result)
+  {
+    TESTTHROWSM(double, throw (int)42, "wrong exception raised!");
   }
 };
 
