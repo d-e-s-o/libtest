@@ -20,9 +20,7 @@
 #ifndef TSTTESTCASE_HPP
 #define TSTTESTCASE_HPP
 
-#define ASSERT_NO_DEFAULT_BACKEND
-#include <util/Assert.hpp>
-#undef ASSERT_NO_DEFAULT_BACKEND
+#include <util/AssertImpl.hpp>
 
 #include "TestBase.hpp"
 #include "TestResult.hpp"
